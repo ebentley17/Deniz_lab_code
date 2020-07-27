@@ -8,7 +8,7 @@ import pytest
 import nanodrop_wrangling as nw
 
 
-def test_tidy_nanodrop_data(to_glob="test_data/*.tsv", **kwargs):
+def test_tidy_nanodrop_data(to_glob="nanodrop_test_data/*.tsv", **kwargs):
     """For testing a variety of input kwargs"""
 
     file_list = glob.glob(to_glob)
@@ -40,7 +40,7 @@ def test_tidy_nanodrop_data(to_glob="test_data/*.tsv", **kwargs):
 
 
 def test_tidy_nanodrop_data_defaults():
-    df = test_tidy_nanodrop_data(to_glob="test_data/*.tsv")
+    df = test_tidy_nanodrop_data(to_glob="nanodrop_test_data/*.tsv")
 
     for peptide in df["Peptide"].values:
         assert "RG" in peptide
@@ -48,7 +48,7 @@ def test_tidy_nanodrop_data_defaults():
 
 def test_tidy_nanodrop_data_read_csv():
     df = test_tidy_nanodrop_data(
-        to_glob="test_data/*.csv",
+        to_glob="nanodrop_test_data/*.csv",
         file_reader_kwargs={},
         drop_incorrectly_named_samples=True,
     )
@@ -60,7 +60,7 @@ def test_tidy_nanodrop_data_read_csv():
 def test_tidy_nanodrop_data_raise_incorrect_samples_warning():
     with pytest.warns(UserWarning) as sample_name_divergence:
         df = test_tidy_nanodrop_data(
-            to_glob="test_data/*.csv",
+            to_glob="nanodrop_test_data/*.csv",
             file_reader_kwargs={},
             drop_incorrectly_named_samples=False,
         )
@@ -75,7 +75,7 @@ def test_tidy_nanodrop_data_raise_incorrect_samples_warning():
 
 def test_tidy_nanodrop_data_explicitly_keep_buffers():
     df = test_tidy_nanodrop_data(
-        to_glob="test_data/*.csv",
+        to_glob="nanodrop_test_data/*.csv",
         file_reader_kwargs={},
         drop_incorrectly_named_samples=True,
         drop_buffers=False,
@@ -89,7 +89,7 @@ def test_tidy_nanodrop_data_explicitly_keep_buffers():
 def test_nanodrop_data_nonmatching_column_names():
     # bad_input contains a file without the "Sample ID" category
     # all samples from that file will be dropped, but an extra empty column makes it into the output
-    file_list = glob.glob("test_data/bad_input/*.tsv")
+    file_list = glob.glob("nanodrop_test_data/bad_input/*.tsv")
     with pytest.warns(UserWarning):
         df = nw.tidy_nanodrop_data(file_list,
                                     drop_incorrectly_named_samples=True)
