@@ -9,6 +9,8 @@ import pandas as pd
 
 
 def df_from_xls(file):
+    """Builds pandas DataFrame from plate fluorimeter .xls file output."""
+    
     df_list = []
 
     #assume last sheet (Sheet1) is empty

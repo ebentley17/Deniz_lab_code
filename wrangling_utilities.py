@@ -1,3 +1,5 @@
+"""Functions useful for wrangling data regardless of source."""
+
 import pandas as pd
 import bokeh.plotting
 
@@ -139,15 +141,15 @@ def identify_outliers(df, col_to_check, **kwargs):
     
     lower, upper = find_outlier_bounds(df, col_to_check, **kwargs)
 
-    outlier_bounds = pd.DataFrame(data=
-                                  {"lower": lower,
-                                  "upper": upper}
-                                 ).reset_index()
+    outlier_bounds = pd.DataFrame(
+        data={"lower": lower, "upper": upper}
+        ).reset_index()
 
     df_with_bounds = pd.merge(df, outlier_bounds)
-    outliers = df_with_bounds.loc[(df_with_bounds[col_to_check] > df_with_bounds["upper"]) |
-                                  (df_with_bounds[col_to_check] < df_with_bounds["lower"])
-                                 ].index
+    outliers = df_with_bounds.loc[
+        (df_with_bounds[col_to_check] > df_with_bounds["upper"]) |
+        (df_with_bounds[col_to_check] < df_with_bounds["lower"])
+        ].index
 
     df_with_bounds[f"{col_to_check} outlier"] = False 
     df_with_bounds.loc[outliers, f"{col_to_check} outlier"] = True

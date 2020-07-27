@@ -66,10 +66,11 @@ def tidy_nanodrop_data(
     except(AssertionError):
         warnings.warn("""\nColumn names do not match across all dataframes.
         Attempting to concatenate anyway. CHECK OUTPUT FOR ERRORS.""",
-                     UserWarning)
+        UserWarning)
     
-    df = pd.concat(df_list, axis=0, ignore_index=True, sort=False
-                  ).reset_index(drop=True)
+    df = pd.concat(
+        df_list, axis=0, ignore_index=True, sort=False
+        ).reset_index(drop=True)
     df = analyze_sample_names(df, **kwargs)
     df = wrangling_utilities.break_out_date_and_time(df)
 
@@ -409,9 +410,9 @@ def identify_outliers(df, col_to_check, **kwargs):
     
     if "groupby" not in kwargs.keys():
         try:
-            kwargs[groupby] = list(kwargs.pop("ParseKey").column_names)
+            kwargs["groupby"] = list(kwargs.pop("ParseKey").column_names)
         except: 
-            kwargs[groupby] = "Sample ID"
+            kwargs["groupby"] = "Sample ID"
     
     warnings.warn("This function moved to wrangling_utilities.py", DeprecationWarning)
     return wrangling_utilities.identify_outliers(df, col_to_check, **kwargs)

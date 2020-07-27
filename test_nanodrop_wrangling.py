@@ -84,7 +84,7 @@ def test_rename_abs_columns_by_wavelength():
         assert col_name in renamed.columns
     
     for number in [1, 2]:
-        for row_index, row in test_df.iterrows():
+        for _, row in test_df.iterrows():
             assert row[f"{number} (Abs)"] in renamed[f"Abs {row[f'{number} (nm)']}"].values
 
     
@@ -96,19 +96,19 @@ def test_ParseKey():
     test_key.column_names = ("hi",)
     
     with pytest.raises(RuntimeError):
-        bad_key = nw.ParseKey(10, separator=" ")
+        nw.ParseKey(10, separator=" ")
         
     with pytest.raises(RuntimeError):
-        bad_key = nw.ParseKey(("10", "hi", str), separator="")  
+        nw.ParseKey(("10", "hi", str), separator="")  
 
     with pytest.raises(RuntimeError):
-        bad_key = nw.ParseKey((str, "type"), separator=" ")
+        nw.ParseKey((str, "type"), separator=" ")
     
     with pytest.raises(RuntimeError):
-        bad_key = nw.ParseKey(("str", "type"), separator=" ")
+        nw.ParseKey(("str", "type"), separator=" ")
         
     with pytest.raises(RuntimeError):
-        repeat_columns = nw.ParseKey(("pep", str), ("pep", float), separator=" ")
+        nw.ParseKey(("pep", str), ("pep", float), separator=" ")
 
     
 def test_make_columns_by_parse_key():
@@ -277,6 +277,3 @@ def test_drop_zeros_several_columns():
     assert len(dropped) == 1
     assert 0 not in dropped["1 (nm)"].values
     assert 0 not in dropped["2 (nm)"].values
-
-    
-# TODO: test find_outlier_bounds and identify_outliers

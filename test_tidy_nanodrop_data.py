@@ -91,8 +91,10 @@ def test_nanodrop_data_nonmatching_column_names():
     # all samples from that file will be dropped, but an extra empty column makes it into the output
     file_list = glob.glob("nanodrop_test_data/bad_input/*.tsv")
     with pytest.warns(UserWarning):
-        df = nw.tidy_nanodrop_data(file_list,
-                                    drop_incorrectly_named_samples=True)
+        df = nw.tidy_nanodrop_data(
+            file_list,
+            drop_incorrectly_named_samples=True
+        )
         
     float_cols = [
         "Abs 350",
