@@ -4,8 +4,8 @@ import os
 import warnings
 import pandas as pd
 
-import bokeh_scatter
-import wrangling_utilities
+import wrangling.bokeh_scatter as bokeh_scatter
+import wrangling.utilities
 
 
 def ifx_to_dataframe(filepath):
@@ -78,10 +78,10 @@ def add_descriptor_data(df_descriptor_tuple):
 
 
 def concentration_to_nM(df, columns):
-    """Moved to wrangling_utilities."""
+    """Moved to wrangling.utilities."""
     
-    warnings.warn("This function moved to wrangling_utilities.py", DeprecationWarning)
-    return wrangling_utilities.concentration_to_nM(df, columns)
+    warnings.warn("This function moved to wrangling.utilities.py", DeprecationWarning)
+    return wrangling.utilities.concentration_to_nM(df, columns)
 
 
 def plot_averages(
@@ -93,10 +93,10 @@ def plot_averages(
     palette=bokeh_scatter.scatter_palette,
     **kwargs
 ):
-    """Moved to wrangling_utilities."""
+    """Moved to wrangling.utilities."""
     
-    warnings.warn("This function moved to wrangling_utilities.py", DeprecationWarning)
-    return wrangling_utilities.plot_averages(
+    warnings.warn("This function moved to wrangling.utilities.py", DeprecationWarning)
+    return wrangling.utilities.plot_averages(
         df, 
         x_axis, 
         y_axis, 

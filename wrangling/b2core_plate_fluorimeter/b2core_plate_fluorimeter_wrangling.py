@@ -3,14 +3,11 @@ plate fluorimeter, which outputs excel files.
 This code was developed for a FRET experiment and has not been thoroughly tested.
 """
 
-
 import xlrd
 import pandas as pd
 
 
 def df_from_xls(file):
-    """Builds pandas DataFrame from plate fluorimeter .xls file output."""
-    
     df_list = []
 
     #assume last sheet (Sheet1) is empty

@@ -7,10 +7,10 @@ import pandas as pd
 import numpy as np
 import warnings
 
-import wrangling_utilities
+import wrangling.utilities as utilities
 
 
-def tidy_nanodrop_data(
+def run_all(
     list_of_files, file_reader=pd.read_csv, file_reader_kwargs=dict(sep="\t"), **kwargs
 ):
     """
@@ -66,13 +66,12 @@ def tidy_nanodrop_data(
     except(AssertionError):
         warnings.warn("""\nColumn names do not match across all dataframes.
         Attempting to concatenate anyway. CHECK OUTPUT FOR ERRORS.""",
-        UserWarning)
+                     UserWarning)
     
-    df = pd.concat(
-        df_list, axis=0, ignore_index=True, sort=False
-        ).reset_index(drop=True)
+    df = pd.concat(df_list, axis=0, ignore_index=True, sort=False
+                  ).reset_index(drop=True)
     df = analyze_sample_names(df, **kwargs)
-    df = wrangling_utilities.break_out_date_and_time(df)
+    df = utilities.break_out_date_and_time(df)
 
     return df
 
@@ -371,39 +370,39 @@ def _identify_buffer_measurements(df):
 
 
 def break_out_date_and_time(df):
-    """Moved to wrangling_utilities."""
+    """Moved to utilities."""
     
-    warnings.warn("This function moved to wrangling_utilities.py", DeprecationWarning)
-    return wrangling_utilities.break_out_date_and_time(df)
+    warnings.warn("This function moved to utilities.py", DeprecationWarning)
+    return utilities.break_out_date_and_time(df)
 
 
 def drop_zeros(df, columns):
-    """Moved to wrangling_utilities."""
+    """Moved to utilities."""
     
-    warnings.warn("This function moved to wrangling_utilities.py", DeprecationWarning)
-    return wrangling_utilities.drop_zeros(df, columns)
+    warnings.warn("This function moved to utilities.py", DeprecationWarning)
+    return utilities.drop_zeros(df, columns)
 
 
 def find_outlier_bounds(df, col_to_check, ParseKey=None):
-    """Moved to wrangling_utilities.
+    """Moved to utilities.
     
     If ParseKey is given, passes ParseKey.column_names to groupby; otherwise, passes "Sample ID"
     """
     
-    warnings.warn("This function moved to wrangling_utilities.py", DeprecationWarning)
+    warnings.warn("This function moved to utilities.py", DeprecationWarning)
     
     if ParseKey == None:
         groupby = "Sample ID"
     else:
         groupby = list(ParseKey.column_names)
     
-    return wrangling_utilities.find_outlier_bounds(df, col_to_check, groupby=groupby)
+    return utilities.find_outlier_bounds(df, col_to_check, groupby=groupby)
     
 
 def identify_outliers(df, col_to_check, **kwargs):
-    """Moved to wrangling_utilities.
+    """Moved to utilities.
     
-    If groupby is given, passes it to wrangling_utilities.identify_outliers.
+    If groupby is given, passes it to utilities.identify_outliers.
     If ParseKey is given, passes ParseKey.column_names to groupby. 
     If neither is given, passes "Sample ID" to groupby.
     """
@@ -414,5 +413,5 @@ def identify_outliers(df, col_to_check, **kwargs):
         except: 
             kwargs["groupby"] = "Sample ID"
     
-    warnings.warn("This function moved to wrangling_utilities.py", DeprecationWarning)
-    return wrangling_utilities.identify_outliers(df, col_to_check, **kwargs)
+    warnings.warn("This function moved to utilities.py", DeprecationWarning)
+    return utilities.identify_outliers(df, col_to_check, **kwargs)

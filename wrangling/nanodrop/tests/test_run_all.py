@@ -1,18 +1,18 @@
-"These tests of the tidy_nanodrop_data function from nanodrop_wrangling take a few seconds to run."
+"These tests of the run_all() function from tidy_data take a few seconds to run."
 
 import numpy as np
 import pandas as pd
 import glob
 import pytest
 
-import nanodrop_wrangling as nw
+import wrangling.nanodrop.tidy_data as td
 
 
-def test_tidy_nanodrop_data(to_glob="nanodrop_test_data/*.tsv", **kwargs):
+def test_run_all(to_glob="test_data/*.tsv", **kwargs):
     """For testing a variety of input kwargs"""
 
     file_list = glob.glob(to_glob)
-    df = nw.tidy_nanodrop_data(file_list, **kwargs)
+    df = td.run_all(file_list, **kwargs)
 
     assert (
         df.columns == [
@@ -39,16 +39,16 @@ def test_tidy_nanodrop_data(to_glob="nanodrop_test_data/*.tsv", **kwargs):
     return df
 
 
-def test_tidy_nanodrop_data_defaults():
-    df = test_tidy_nanodrop_data(to_glob="nanodrop_test_data/*.tsv")
+def test_run_all_defaults():
+    df = test_run_all(to_glob="test_data/*.tsv")
 
     for peptide in df["Peptide"].values:
         assert "RG" in peptide
 
 
-def test_tidy_nanodrop_data_read_csv():
-    df = test_tidy_nanodrop_data(
-        to_glob="nanodrop_test_data/*.csv",
+def test_run_all_read_csv():
+    df = test_run_all(
+        to_glob="test_data/*.csv",
         file_reader_kwargs={},
         drop_incorrectly_named_samples=True,
     )
@@ -57,10 +57,10 @@ def test_tidy_nanodrop_data_read_csv():
         assert "RG" in peptide
 
 
-def test_tidy_nanodrop_data_raise_incorrect_samples_warning():
+def test_run_all_raise_incorrect_samples_warning():
     with pytest.warns(UserWarning) as sample_name_divergence:
-        df = test_tidy_nanodrop_data(
-            to_glob="nanodrop_test_data/*.csv",
+        df = test_run_all(
+            to_glob="test_data/*.csv",
             file_reader_kwargs={},
             drop_incorrectly_named_samples=False,
         )
@@ -73,9 +73,9 @@ def test_tidy_nanodrop_data_raise_incorrect_samples_warning():
     assert "RG7" in df["Peptide"].values
 
 
-def test_tidy_nanodrop_data_explicitly_keep_buffers():
-    df = test_tidy_nanodrop_data(
-        to_glob="nanodrop_test_data/*.csv",
+def test_run_all_explicitly_keep_buffers():
+    df = test_run_all(
+        to_glob="test_data/*.csv",
         file_reader_kwargs={},
         drop_incorrectly_named_samples=True,
         drop_buffers=False,
@@ -83,18 +83,16 @@ def test_tidy_nanodrop_data_explicitly_keep_buffers():
 
     assert "RG7" in df["Peptide"].values
 
-    assert len(nw._identify_buffer_measurements(df)) > 0
+    assert len(td._identify_buffer_measurements(df)) > 0
 
     
 def test_nanodrop_data_nonmatching_column_names():
     # bad_input contains a file without the "Sample ID" category
     # all samples from that file will be dropped, but an extra empty column makes it into the output
-    file_list = glob.glob("nanodrop_test_data/bad_input/*.tsv")
+    file_list = glob.glob("test_data/bad_input/*.tsv")
     with pytest.warns(UserWarning):
-        df = nw.tidy_nanodrop_data(
-            file_list,
-            drop_incorrectly_named_samples=True
-        )
+        df = td.run_all(file_list,
+                                    drop_incorrectly_named_samples=True)
         
     float_cols = [
         "Abs 350",

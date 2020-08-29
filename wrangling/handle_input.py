@@ -1,20 +1,17 @@
-"""Functions to interpret user input in "Guide for Non-Coders.ipynb" to simplify useage of nanodrop_wrangling"""
+"""Functions to interpret user input in "Guide for Non-Coders.ipynb" 
+to simplify useage of wrangling.nanodrop.tidy_data()
+"""
 
 import sys
 import warnings
 import glob
 import numpy as np
 
-clean_legend_locations = [
-    'top left', 'top center', 'top right', 
-    'center left', 'center', 'center right', 
-    'bottom left', 'bottom center', 'bottom right'
-] 
-allowed_legend_locations = (
-    clean_legend_locations + 
-    [x.replace(" ", "_") for x in clean_legend_locations] + 
-    ["", "None"]
-)
+clean_legend_locations = ['top left', 'top center', 'top right', 
+                          'center left', 'center', 'center right', 
+                          'bottom left', 'bottom center', 'bottom right'] 
+allowed_legend_locations = clean_legend_locations + [x.replace(" ", "_") for x in clean_legend_locations] + ["", "None"]
+
 
 def interpret(instructions, input_manipulator=lambda a : a, error_message=None, **kwargs):
     """A while loop to repeat a request until the input matches an allowed one.
@@ -112,10 +109,8 @@ def validate_file_input(string):
     file_folder_dict = {file_name : file_or_folder(file_name) for file_name in glob.glob(string)}
     
     while "folder" in file_folder_dict.values():
-        folder_list = [
-            file_name for file_name, is_file_or_folder in file_folder_dict.items()
-            if is_file_or_folder == "folder"
-        ]
+        folder_list = [file_name for file_name, is_file_or_folder in file_folder_dict.items()
+                       if is_file_or_folder == "folder"]
         
         ignore_or_include = interpret(
             f"This filepath includes the following folder(s): {folder_list}" 
@@ -132,10 +127,8 @@ def validate_file_input(string):
                     folder_name += "/"
                 folder_name += "*"
                 
-                file_folder_dict.update(
-                    {file_name : file_or_folder(file_name) 
-                    for file_name in glob.glob(folder_name)}
-                )
+                file_folder_dict.update({file_name : file_or_folder(file_name) 
+                                         for file_name in glob.glob(folder_name)})
     
     if len(file_folder_dict) == 0:
         raise RuntimeError("No files were specified.")
@@ -347,9 +340,8 @@ def request_plot_specifications(data):
     with warnings.catch_warnings():
         warnings.simplefilter(action='ignore', category=FutureWarning)
     
-        kwargs["data"] = data.dropna(
-            axis="index", subset=[kwargs["x"], kwargs["y"]]
-            ).drop(index=data.loc[(data[kwargs["x"]] == "") | (data[kwargs["y"]] == "")].index
-            ).astype({kwargs["x"]: float, kwargs["y"]: float})
+        kwargs["data"] = data.dropna(axis="index", subset=[kwargs["x"], kwargs["y"]]
+                            ).drop(index=data.loc[(data[kwargs["x"]] == "") | (data[kwargs["y"]] == "")].index
+                            ).astype({kwargs["x"]: float, kwargs["y"]: float})
     
     return kwargs

@@ -1,5 +1,3 @@
-"""Use the hypothesis testing module to test part of nanodrop_wrangling."""
-
 import numpy as np
 import pandas as pd
 import glob
@@ -10,12 +8,12 @@ import hypothesis.strategies as st
 from hypothesis import given
 from hypothesis.extra.pandas import data_frames, column, columns
 
-import nanodrop_wrangling as nw
+import wrangling.nanodrop.tidy_data as td
 
 
 @given(data_frames(columns=[column("1 (nm)", dtype=int), column("1 (Abs)", dtype=float)]))
 def test_with_hypothesis_rename_abs_column_by_wavelength(df):    
-    renamed = nw.rename_abs_columns_by_wavelength(df)
+    renamed = td.rename_abs_columns_by_wavelength(df)
     
     if len(df) == 0:
         assert renamed == None
