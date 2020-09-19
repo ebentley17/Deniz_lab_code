@@ -1,4 +1,42 @@
-"""Functions for handling data from the Deniz lab nanodrop, especially phase diagrams."""
+"""A module for handling data from the Deniz lab nanodrop, especially phase diagrams.
+
+Classes
+-------
+ParseKey
+    organizes information to parse "Sample ID" column
+    instance parse_rna_peptide is provided
+
+Functions
+---------
+run_all(list_of_files, file_reader=pd.read_csv, file_reader_kwargs=dict(sep="\t"), **kwargs)
+    Runs all subsequent functions on the specified data.
+clean_up_columns(df)
+    Removes garbage columns from nanodrop data.
+rename_abs_columns_by_wavelength(df)
+    Tidies absorbance values.
+analyze_sample_names(df, ParseKey=parse_rna_peptide, **kwargs)
+    Analyzes "Sample ID" column of a dataframe to produce new, tidy columns of data. 
+_make_columns_by_parse_key(df, ParseKey)
+    Adds new columns to a pandas DataFrame according to a given ParseKey object.
+_handle_incorrectly_named_samples(
+    df,
+    incorrectly_named_samples,
+    drop_incorrectly_named_samples=False,
+    drop_buffers=True,
+)
+    Handles given incorrectly named samples in given DataFrame.
+_identify_buffer_measurements(df)
+    Identifies rows of a dataframe where the 'Sample ID' column contains "buffer" or "blank."
+    
+Depracated
+----------
+These functions have been moved to wrangling/utilities:
+    break_out_date_and_time(df)
+    drop_zeros(df, columns)
+    find_outlier_bounds(df, col_to_check, ParseKey=None)
+    identify_outliers(df, col_to_check, **kwargs)
+"""
+
 # TODO: note nanodrop make and model
 # TODO: automatically detect types instead of specifying? Skip type specification altogether and let everything be strings?
 
@@ -38,7 +76,7 @@ def run_all(
     allowed kwargs : 
         ParseKey : an object of class ParseKey, default parse_rna_peptide
             Defines how to interpret "Sample ID"
-            ParseKey options: parse_rna_peptide, parse_kdna_mg2, or provide your own
+            ParseKey options: use parse_rna_peptide or provide your own
         drop_incorrectly_named_samples : bool, default False
             defines whether to drop rows whose "Sample ID" is unable to be parsed
         drop_buffers : bool, default True
@@ -197,13 +235,6 @@ parse_rna_peptide = ParseKey(
     separator="_",
 )
 
-parse_kdna_mg2 = ParseKey(
-    ("kDNA sample type", str),
-    ("DNA concentration (ng/uL)", float),
-    ("Mg2+ concentration", float),
-    separator="_",
-)
-
 
 def analyze_sample_names(df, ParseKey=parse_rna_peptide, **kwargs):
     """
@@ -213,7 +244,7 @@ def analyze_sample_names(df, ParseKey=parse_rna_peptide, **kwargs):
     ----------
     df : a single dataframe with a "Sample ID" column whose contents are specified by the given ParseKey
     ParseKey : an object of class ParseKey defining how to interpret "Sample ID"
-        ParseKey options: parse_rna_peptide, parse_kdna_mg2, or provide your own
+        ParseKey options: use parse_rna_peptide or provide your own
     **kwargs : to be passed to _handle_incorrectly_named_samples
     
     Returns

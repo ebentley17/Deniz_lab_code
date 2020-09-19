@@ -1,4 +1,28 @@
-"""Useful code for wrangling data from many instrument types."""
+"""Useful code for wrangling data from many instrument types.
+
+Functions
+---------
+break_out_date_and_time(df, breakout_column="Date and Time", date_time_split=" ")
+    Breaks a specified column into separate "Date" and "Time" columns.
+drop_zeros(df, columns)
+    Drops rows that contain zeros in the specified column(s) to allow log scale plotting.
+concentration_to_nM(df, columns)
+    Converts uM and pM concentration values to nM and renames the column.
+find_outlier_bounds(df, col_to_check, groupby=None)
+    Calculates upper and lower outlier bounds.
+identify_outliers(df, col_to_check, **kwargs)
+    Identifies outliers among measurements in given column of a dataframe.
+plot_averages(
+    df, 
+    x_axis, 
+    y_axis, 
+    cat=None, 
+    p=None,
+    palette=bokeh_scatter.scatter_palette,
+    **kwargs
+)
+    Add lines defining averages of y_axis values at each point along x_axis to an existing plot.
+"""
 
 import pandas as pd
 import bokeh.plotting
@@ -14,6 +38,8 @@ def break_out_date_and_time(df, breakout_column="Date and Time", date_time_split
     
     Expects date_time_split to appear for the first time between the "date" and "time" entries.
     Any following splits will be grouped with "time".
+    
+    TODO: allow specification of whether to keep subsequent splits
     """
 
     df["Date"] = ""

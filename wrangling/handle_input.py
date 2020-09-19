@@ -1,11 +1,46 @@
 """Functions to interpret user input in "Guide for Non-Coders.ipynb" 
 to simplify useage of wrangling.nanodrop.tidy_data()
+
+Objects
+-------
+clean_legend_locations : list
+    a human-readable list of legend locations for bokeh plots
+allowed_legend_locations : list
+    inputs that can be intepreted as legend locations for bokeh plots (including "None" and "")
+
+Functions
+---------
+interpret(instructions, input_manipulator=lambda a : a, error_message=None, **kwargs)
+    A while loop to repeat a request until the input matches an allowed one.
+evaluate_kwargs_at_input(user_input, **kwargs)
+    Checks whether kwargs are functions, then attempts to evaluate them at user_input.
+confirm(confirm_message="Are you sure?")
+    Asks the user for confirmation.
+file_or_folder(file_name)
+    Checks if a glob-able file name is a file or folder.
+validate_file_input(filepath)
+    Selects files from glob-able filepath and validates whether they are useable.
+check_positive_int(string)
+    Converts a string to integer and checks if it's positive.
+string_to_type(string)
+    Converts a string to a python type.
+yes_no_to_bool(string)
+    Converts 'yes' or 'no' inputs to True or False boolean.
+check_membership(string, list_to_check, is_confirm=None, **kwargs)
+    Confirms input is in a given list.
+exclude_options(string, list_to_exclude)
+    Confirms input is not in a given list. 
+request_parsekey_specifications()
+    Queries the user for args to pass to ParseKey.
+request_plot_specifications(data)
+    Queries the user for kwargs to pass to bokeh_scatter.scatter().
 """
 
 import sys
 import warnings
 import glob
 import numpy as np
+
 
 clean_legend_locations = ['top left', 'top center', 'top right', 
                           'center left', 'center', 'center right', 
@@ -96,7 +131,7 @@ def file_or_folder(file_name):
             return "file"
 
             
-def validate_file_input(string):
+def validate_file_input(filepath):
     """Takes a specification of files as a string and returns a tuple (list, str), where
         index 0 is a list of specific file paths,
         index 1 is the detected file extension, or None if the files don't have extensions
@@ -106,7 +141,7 @@ def validate_file_input(string):
     Throws an error if those requirements aren't met.
     """
     
-    file_folder_dict = {file_name : file_or_folder(file_name) for file_name in glob.glob(string)}
+    file_folder_dict = {file_name : file_or_folder(file_name) for file_name in glob.glob(filepath)}
     
     while "folder" in file_folder_dict.values():
         folder_list = [file_name for file_name, is_file_or_folder in file_folder_dict.items()
@@ -187,7 +222,7 @@ def string_to_type(string):
 
 
 def yes_no_to_bool(string):
-    """Converts 'yes' or 'no' inputs to True or False booelan. Throws an error at other inputs."""
+    """Converts 'yes' or 'no' inputs to True or False boolean. Throws an error at other inputs."""
 
     if string.lower() in ["yes", "y"]:
         return True
@@ -198,7 +233,7 @@ def yes_no_to_bool(string):
         
 
 def check_membership(string, list_to_check, is_confirm=None, **kwargs):
-    """Checks if input is in a given list. Returns the input if yes; raises an error if not. Case sensitive.
+    """Confirms input is in a given list. Returns the input if yes; raises an error if not. Case sensitive.
     
     Parameters
     ----------
@@ -240,7 +275,7 @@ def check_membership(string, list_to_check, is_confirm=None, **kwargs):
 
 
 def exclude_options(string, list_to_exclude):
-    """Checks to make sure input is not in a given list. 
+    """Confirms input is not in a given list. 
     Returns the input if yes; raises an error if not. 
     Case sensitive.
     """
@@ -253,7 +288,7 @@ def exclude_options(string, list_to_exclude):
 
 
 def request_parsekey_specifications():
-    """Queries the user for args to pass to ParseKey."""
+    """Queries the user for args to pass to ParseKey, a class found in wrangling/nanodrop/tidy_data."""
     
     number_of_pieces = interpret(
         "How many pieces of data are in your sample names?",
@@ -282,7 +317,7 @@ def request_parsekey_specifications():
 
 
 def request_plot_specifications(data):
-    """Queries the user for kwargs to pass to bokeh_scatter.scatter(). Can be passed directly.
+    """Queries the user for kwargs to pass to wrangling/bokeh_scatter.scatter(). Can be passed directly.
     Cleans up provided x, y columns of data by dropping NAs, dropping empty strings, and converting to float.
     """
     

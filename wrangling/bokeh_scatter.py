@@ -1,4 +1,28 @@
-"""Scatter function written by Justin Bois, as found in his 
+"""A module to build bokeh scatter plots.
+
+Objects
+--------
+scatter_palette : list
+    a default color palette of 10 items
+    
+Functions
+---------
+scatter(
+    data=None,
+    cat=None,
+    x=None,
+    y=None,
+    p=None,
+    palette=None,
+    show_legend=True,
+    click_policy="hide",
+    marker_kwargs=None,
+    **kwargs,
+):
+    builds a bokeh scatter plot
+
+
+Scatter function written by Justin Bois, as found in his 
 2019 Programming for Biological Sciences Bootcamp.
 
 Modified by Emily Bentley to satisfy deprecation warnings.
