@@ -17,27 +17,32 @@ def ifx_to_dataframe(filepath):
     with open(filepath, 'r') as f:
         descriptor = ""
         line = f.readline()
-        while line[:7] != "Columns":
+        while "Columns" not in line:
             descriptor += line
             #not stripping whitespace from multi-line descriptor
             line = f.readline()
-        
+
         column_names = line[8:].rstrip().split(",")
-    
-        #next line
+
+        # proceed past columns line
         line = f.readline().rstrip()
+
+        # G factor info now included after column names
+        while "[Data]" not in line:
+            descriptor += line
+            line = f.readline()
+
         #skip "[Data]" line
-        if line[:6] == "[Data]":
-            line = f.readline().rstrip()
-    
+        line = f.readline().rstrip()
+
         data = []
         while line != '':
             data.append(line)
-            line = f.readline().rstrip()
-        
+            line = f.readline().rstrip()        
+
     not_allowed = ["", "\t"]
     for i, line in enumerate(data):
-        data[i] = [x for x in line.split(" ") if x not in not_allowed]
+        data[i] = [x.rstrip() for x in line.split(" ") if x not in not_allowed]
         
     df = pd.DataFrame.from_records(data, columns=column_names)
     
@@ -58,7 +63,7 @@ def add_descriptor_data(df_descriptor_tuple):
     
     title = descriptor[6:descriptor.find("\n")]
     
-    title_attributes = title.split(" - ")
+    title_attributes = [x.strip().rstrip() for x in title.split(" - ")]
     conditions = {}
     for attribute in title_attributes:
         divisor = attribute.find("uM")
