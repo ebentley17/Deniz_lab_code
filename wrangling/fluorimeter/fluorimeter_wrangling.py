@@ -55,16 +55,13 @@ def add_descriptor_data(df_descriptor_tuple):
     
     Expects conditions to be specified as "[concentration] [nM/uM] [molecule]", 
     and for different molecule specifications to be separated by " - "
-    
-    TODO: this function is very finicky about exact formatting
     """
     
     df, descriptor = df_descriptor_tuple
+    conditions = {}
     
     title = descriptor[6:descriptor.find("\n")]
-    
     title_attributes = [x.strip().rstrip() for x in title.split(" - ")]
-    conditions = {}
     for attribute in title_attributes:
         divisor = attribute.find("uM")
         if divisor == -1:
@@ -78,8 +75,97 @@ def add_descriptor_data(df_descriptor_tuple):
         molecule = attribute[divisor+3:]
         
         conditions[f"[{molecule}]"] = [concentration]
+
+    def find_rest_of_line(string):
+        """Given a string that exists in descriptor, returns the remainder of that line of descriptor."""
+        string_start = descriptor.find(string) + len(string)
+        string_end = descriptor[string_start : ].find("\n") + string_start
+        return descriptor[string_start : string_end]
+
+    conditions["comment"] = find_rest_of_line("Comment=")
+    conditions["timestamp"] = find_rest_of_line("Timestamp=")
+    conditions["ex wavelength (nm)"] = find_rest_of_line("ExcitationWavelength=type:numeric,unit:nm,fixed:")
+    conditions["em wavelength (nm)"] = find_rest_of_line("EmissionWavelength=type:numeric,unit:nm,fixed:")
     
     return pd.concat([df, pd.DataFrame(conditions)], axis=1).fillna(method="ffill", axis="index")
+
+
+def assemble_ifx_files(file_list):
+    """Performs add_descriptor_data(ifx_to_dataframe(filepath)) on each filepath in the list
+    and concatenates the results into a single dataframe.
+    """
+    df_list = []
+
+    for filepath in file_list:
+        df = add_descriptor_data(ifx_to_dataframe(filepath))
+        df_list.append(df)
+
+    return pd.concat(df_list, ignore_index=True)
+
+
+def break_out_variable(df, columns=None, variable="titrant"):
+    """This is used to simplify dataframes of multiple experiments with different variables.
+    For a given DataFrame and columns of concentration, 
+    breaks the column names into a "{variable}" column 
+    and combines the column values into a "[{variable}]" column.
+    
+    If no columns are provided, all columns with NaN values are assumed
+    to be variable entries. This only works if there is only one variable.
+    
+    Only one kind of variable may be addressed at once.
+    """
+    
+    if columns is None:
+        columns = df.columns[df.isna().any()]
+    
+    df[variable] = ""
+    df[f"[{variable}]"] = ""
+    
+    for i, row in df.iterrows():
+        try:
+            assert row[columns].notna().sum() == 1
+        except AssertionError:
+            raise RuntimeError(
+                f"More than one valid entry is detected for row {i}. " +
+                "Use this function to combine columns when each row has " +
+                "only one valid entry between the columns."
+            )
+            
+        for colname in columns:
+            if type(row[colname]) is str:
+                df.loc[i, variable] = colname.replace("[", "").replace("]", "")
+                df.loc[i, f"[{variable}]"] = row[colname]
+                
+    df = df.drop(columns=columns)
+    return df
+
+
+def make_prism_data(
+    df, 
+    groupby_variable="titrant",
+    index_variable="[titrant] (nM)",
+    variable_to_calculate="Anisotropy"
+):
+    """Returns the mean, standard deviation, and count for each grouped entry
+    for easy copy and paste into prism. All variables should be column names in df.
+    """
+    
+    df_list = []
+    
+    if groupby_variable is None:
+        select = df[[index_variable, variable_to_calculate]].astype(float)
+        return select.groupby(index_variable)[variable_to_calculate].describe()[["mean", "std", "count"]]
+    
+    for titrant, data in df.groupby(groupby_variable):
+        floats = data[[variable_to_calculate, index_variable]].astype(float)
+        grouped = floats.groupby(index_variable)[variable_to_calculate].describe()
+        select = grouped[["mean", "std", "count"]].transpose()
+        multiindex = pd.MultiIndex.from_product(
+            [[titrant], ["mean", "std", "count"]], names=[groupby_variable, "value"]
+        )
+        df_list.append(select.set_index(multiindex))
+
+    return pd.concat(df_list).transpose()
 
 
 def concentration_to_nM(df, columns):
