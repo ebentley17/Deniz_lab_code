@@ -87,7 +87,7 @@ def add_descriptor_data(df_descriptor_tuple):
     conditions["ex wavelength (nm)"] = find_rest_of_line("ExcitationWavelength=type:numeric,unit:nm,fixed:")
     conditions["em wavelength (nm)"] = find_rest_of_line("EmissionWavelength=type:numeric,unit:nm,fixed:")
     
-    return pd.concat([df, pd.DataFrame(conditions)], axis=1).fillna(method="ffill", axis="index")
+    return pd.concat([df, pd.DataFrame(conditions, index=[0])], axis=1).fillna(method="ffill", axis="index")
 
 
 def assemble_ifx_files(file_list):
