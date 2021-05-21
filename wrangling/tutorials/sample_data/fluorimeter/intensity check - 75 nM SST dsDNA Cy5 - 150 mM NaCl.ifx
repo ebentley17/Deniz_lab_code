@@ -1,0 +1,48 @@
+Title=intensity check - 75 nM SST dsDNA Cy5 - 150 mM NaCl
+Comment=1,1,1,1
+Signature=ISS_Experiment_Ver_1_0
+Timestamp=Fri Nov 30 14:55:41 2018
+
+AcquisitionType=Photon Counting
+AcquisitionFormat=L
+AcquisitionSide=Right
+
+Measurable=Intensity
+
+RightEmissionWavelengthBandwidth=8
+ExcitationWavelengthBandwidth=8
+Visualization=PlotType:2D,X:EmissionWavelength,Y:Intensity
+
+
+EmissionWavelength=type:numeric,unit:nm,from:655.0,to:680.0,step:1.0
+ExcitationWavelength=type:numeric,unit:nm,fixed:649.0
+
+Space=EmissionWavelength
+Columns=EmissionWavelength,Intensity,IntensityStdError,Temperature
+[Data]
+655    	        158191.8       456.05          20.1533
+656    	        161152.8       382.73          20.1333
+657    	        164004.4       432.07          20.1233
+658    	        165563.5       286.06          20.1166
+659    	        166143.8       395.66          20.1066
+660    	        167018.7       462.86            20.09
+661    	        166904.4       454.32          20.0833
+662    	        166739.7       415.66            20.08
+663    	        165216.8       581.77          20.0766
+664    	          163055       477.54            20.06
+665    	        160787.2       298.25          20.0666
+666    	        157003.6        614.3          20.0533
+667    	        154415.5       419.17            20.05
+668    	        149500.1       315.68            20.05
+669    	        145895.9        250.6            20.05
+670    	        139999.4       426.04          20.0466
+671    	        134171.8       444.33          20.0466
+672    	        127843.2       415.09          20.0433
+673    	        123024.1       416.61          20.0433
+674    	        117052.1       217.19          20.0433
+675    	        111447.1       310.12          20.0433
+676    	        105496.5       286.95            20.04
+677    	        100107.1       175.48            20.03
+678    	         94975.5       300.44          20.0366
+679    	         89307.3       357.98          20.0333
+680    	         83982.5       453.29            20.02

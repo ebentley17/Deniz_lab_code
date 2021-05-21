@@ -1,1 +1,3 @@
-"""Contents: fluorimeter_wrangling.py module"""
+"""Contents: fluorimeter.py module"""
+
+from . import corrections

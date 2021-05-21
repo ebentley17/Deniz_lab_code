@@ -42,14 +42,26 @@ import glob
 import numpy as np
 
 
-clean_legend_locations = ['top left', 'top center', 'top right', 
-                          'center left', 'center', 'center right', 
-                          'bottom left', 'bottom center', 'bottom right'] 
-allowed_legend_locations = clean_legend_locations + [x.replace(" ", "_") for x in clean_legend_locations] + ["", "None"]
+clean_legend_locations = [
+    'top left', 'top center', 'top right', 
+    'center left', 'center', 'center right', 
+    'bottom left', 'bottom center', 'bottom right'
+] 
+allowed_legend_locations = (
+    clean_legend_locations 
+    + [x.replace(" ", "_") for x in clean_legend_locations] 
+    + ["", "None"]
+)
 
 
-def interpret(instructions, input_manipulator=lambda a : a, error_message=None, **kwargs):
-    """A while loop to repeat a request until the input matches an allowed one.
+def interpret(
+    instructions, 
+    input_manipulator=lambda a : a, 
+    error_message=None, 
+    **kwargs
+):
+    """Repeat a request until the input matches an allowed one.
+    
     Accepts "quit" as an input and returns None.
     
     Parameters
@@ -84,9 +96,10 @@ def interpret(instructions, input_manipulator=lambda a : a, error_message=None, 
 
 
 def evaluate_kwargs_at_input(user_input, **kwargs):
-    """Checks whether kwargs are functions, then attempts to evaluate them at user_input.
-    Returns the full list of kwargs with functions evaluated.
-    If errors are encountered, returns the unevaluated function.
+    """Check whether kwargs are functions and attempt to evaluate them at user_input.
+    
+    Return the full list of kwargs with functions evaluated.
+    If errors are encountered, return the unevaluated function.
     """
     
     for kwarg_name, kwarg_value in kwargs.items():
@@ -100,7 +113,10 @@ def evaluate_kwargs_at_input(user_input, **kwargs):
 
 
 def confirm(confirm_message="Are you sure?"):
-    """Asks the user for confirmation. Raises an error with no message if user responds "no". Returns nothing."""
+    """Ask the user for confirmation. 
+    
+    Raise an error with no message if user responds "no". Return nothing.
+    """
     
     is_proceed = interpret(
         confirm_message,
@@ -112,9 +128,12 @@ def confirm(confirm_message="Are you sure?"):
 
             
 def file_or_folder(file_name):
-    """Checks if a glob-able file name is a file or folder. Returns "file" or "folder" as a string.
-    A pathname that doesn't result in a valid file with glob returns None.
-    Takes only one file at a time!
+    """Check if a glob-able file name is a file or folder. 
+    
+    Return "file" or "folder" as a string. A pathname that doesn't result in a 
+    valid file with glob returns None.
+    
+    This function accepts only one file at a time!
     """
    
     if len(glob.glob(file_name)) == 0:
@@ -132,20 +151,25 @@ def file_or_folder(file_name):
 
             
 def validate_file_input(filepath):
-    """Takes a specification of files as a string and returns a tuple (list, str), where
+    """Check whether selected files are valid for further processing. 
+    
+    Take a specification of files as a string and returns a tuple (list, str), where
         index 0 is a list of specific file paths,
         index 1 is the detected file extension, or None if the files don't have extensions
-    
-    Requires at least one file to be specified; requires files with extensions to have the same one.
-    Optionally allows files without extensions.
-    Throws an error if those requirements aren't met.
+    Query the user if folders or non-matching file extensions are encountered.
+    At least one file must be specified. Optionally allow files without extensions.
+    Throw an error if those requirements aren't met.
     """
     
-    file_folder_dict = {file_name : file_or_folder(file_name) for file_name in glob.glob(filepath)}
+    file_folder_dict = {
+        file_name : file_or_folder(file_name) for file_name in glob.glob(filepath)
+    }
     
     while "folder" in file_folder_dict.values():
-        folder_list = [file_name for file_name, is_file_or_folder in file_folder_dict.items()
-                       if is_file_or_folder == "folder"]
+        folder_list = [
+            file_name for file_name, is_file_or_folder in file_folder_dict.items()
+            if is_file_or_folder == "folder"
+        ]
         
         ignore_or_include = interpret(
             f"This filepath includes the following folder(s): {folder_list}" 
@@ -162,18 +186,25 @@ def validate_file_input(filepath):
                     folder_name += "/"
                 folder_name += "*"
                 
-                file_folder_dict.update({file_name : file_or_folder(file_name) 
-                                         for file_name in glob.glob(folder_name)})
+                file_folder_dict.update(
+                    {file_name : file_or_folder(file_name) 
+                    for file_name in glob.glob(folder_name)}
+                )
     
     if len(file_folder_dict) == 0:
         raise RuntimeError("No files were specified.")
     
     # only check for matching extensions on files that HAVE extensions
-    files_with_ext = [file_name for file_name in file_folder_dict.keys() if "." in file_name]
+    files_with_ext = [
+        file_name for file_name in file_folder_dict.keys() if "." in file_name
+    ]
     
     if len(files_with_ext) < len(file_folder_dict):
-        confirm("Some files do not have a file extension. They may not all be the same type, which would cause problems."
-        + "\nDo you want to proceed anyway?")
+        confirm(
+            "Some files do not have a file extension. " 
+            + "They may not all be the same type, which would cause problems."
+            + "\nDo you want to proceed anyway?"
+        )
 
     if len(files_with_ext) == 0:
         return list(file_folder_dict.keys()), None
@@ -187,15 +218,20 @@ def validate_file_input(filepath):
             break
     
     if not do_files_match:
-        confirm("Files have different file extensions. Mixing file types will cause problems."
-                + "\nDo you want to proceed anyway?")
+        confirm(
+            "Files have different file extensions. Mixing file types will cause problems."
+            + "\nDo you want to proceed anyway?"
+        )
         check_ext = None
     
     return list(file_folder_dict.keys()), check_ext
 
 
 def check_positive_int(string):
-    """Converts a string to integer and checks if it's positive. Raises an error if not. Returns the int."""
+    """Convert a string to integer and check if it's positive. 
+    
+    Raise an error if not. Return the int.
+    """
     
     if int(string) > 0:
         return int(string)
@@ -204,9 +240,11 @@ def check_positive_int(string):
 
 
 def string_to_type(string):
-    """Useful for converting user input to types passable to ParseKey.
-    Accepts str, int, float, or bool.
+    """Convert user input to types.
+
+    Useful for passing user input to ParseKey. Accept str, int, float, or bool.
     """
+
     if string.lower() in ["string", "str"]:
         data_type = str
     elif string.lower() in ["float", "number", "decimal"]:
@@ -222,7 +260,7 @@ def string_to_type(string):
 
 
 def yes_no_to_bool(string):
-    """Converts 'yes' or 'no' inputs to True or False boolean. Throws an error at other inputs."""
+    """Convert 'yes' or 'no' inputs to True or False boolean. Throw an error at other inputs."""
 
     if string.lower() in ["yes", "y"]:
         return True
@@ -233,7 +271,10 @@ def yes_no_to_bool(string):
         
 
 def check_membership(string, list_to_check, is_confirm=None, **kwargs):
-    """Confirms input is in a given list. Returns the input if yes; raises an error if not. Case sensitive.
+    """Confirm input is in a given list. 
+    
+    Return the input if yes; raise an error if not. 
+    Case sensitive.
     
     Parameters
     ----------
@@ -275,8 +316,9 @@ def check_membership(string, list_to_check, is_confirm=None, **kwargs):
 
 
 def exclude_options(string, list_to_exclude):
-    """Confirms input is not in a given list. 
-    Returns the input if yes; raises an error if not. 
+    """Confirm input is not in a given list.
+
+    Return the input if yes; raise an error if not. 
     Case sensitive.
     """
     try:
@@ -288,7 +330,10 @@ def exclude_options(string, list_to_exclude):
 
 
 def request_parsekey_specifications():
-    """Queries the user for args to pass to ParseKey, a class found in wrangling/nanodrop/tidy_data."""
+    """Query the user for args to pass to ParseKey. 
+    
+    ParseKey is a class found in wrangling/nanodrop/tidy_data.
+    """
     
     number_of_pieces = interpret(
         "How many pieces of data are in your sample names?",
@@ -317,8 +362,10 @@ def request_parsekey_specifications():
 
 
 def request_plot_specifications(data):
-    """Queries the user for kwargs to pass to wrangling/bokeh_scatter.scatter(). Can be passed directly.
-    Cleans up provided x, y columns of data by dropping NAs, dropping empty strings, and converting to float.
+    """Query the user for kwargs to pass to wrangling/bokeh_scatter.scatter(). 
+    
+    Can be passed directly. Clean up provided x, y columns of data by 
+    dropping NAs, dropping empty strings, and converting to float.
     """
     
     kwargs = {}
@@ -375,8 +422,9 @@ def request_plot_specifications(data):
     with warnings.catch_warnings():
         warnings.simplefilter(action='ignore', category=FutureWarning)
     
-        kwargs["data"] = data.dropna(axis="index", subset=[kwargs["x"], kwargs["y"]]
-                            ).drop(index=data.loc[(data[kwargs["x"]] == "") | (data[kwargs["y"]] == "")].index
-                            ).astype({kwargs["x"]: float, kwargs["y"]: float})
+        kwargs["data"] = data.dropna(
+            axis="index", subset=[kwargs["x"], kwargs["y"]]
+            ).drop(index=data.loc[(data[kwargs["x"]] == "") | (data[kwargs["y"]] == "")].index
+            ).astype({kwargs["x"]: float, kwargs["y"]: float})
     
     return kwargs

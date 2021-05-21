@@ -2,8 +2,7 @@
 
 Contents
 --------
-
 tests/
 Guide for Non-Coders.ipynb
-tidy_data.py
+nanodrop.py
 """

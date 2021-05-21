@@ -1,0 +1,46 @@
+Title=intensity check - 75 nM NS dsDNA Cy5 - 150 mM NaCl
+Comment=1,1,1,1
+Signature=ISS_Experiment_Ver_1_0
+Timestamp=Mon Dec 03 10:37:55 2018
+
+AcquisitionType=Photon Counting
+AcquisitionFormat=L
+AcquisitionSide=Right
+
+Measurable=Intensity
+
+RightEmissionWavelengthBandwidth=8
+ExcitationWavelengthBandwidth=8
+Visualization=PlotType:2D,X:EmissionWavelength,Y:Intensity
+
+
+EmissionWavelength=type:numeric,unit:nm,from:655.0,to:680.0,step:1.0
+ExcitationWavelength=type:numeric,unit:nm,fixed:649.0
+
+Space=EmissionWavelength
+Columns=EmissionWavelength,Intensity,IntensityStdError,Temperature
+[Data]
+655    	        105667.1       393.05          19.9966
+656    	          110108       317.54          19.9966
+657    	          114104       370.21          19.9966
+658    	        117259.1       244.43          19.9966
+659    	        120683.4       343.01          19.9966
+660    	        123231.5        356.7          19.9966
+661    	        125551.6       450.16          19.9966
+662    	        127224.5       355.22          19.9966
+663    	        128815.9       410.01          19.9966
+664    	          129488       377.58          19.9966
+665    	        129652.6        533.4            19.99
+666    	        129119.4       380.05            19.99
+667    	        128915.6       538.82            19.99
+668    	        125380.8       307.14            19.99
+669    	        124279.3       342.13            19.99
+670    	        123083.6       263.68            19.99
+671    	        119395.4       374.46            19.99
+672    	        115807.7       196.51          19.9966
+673    	        113327.5       358.78          19.9966
+674    	        108892.2        376.4          19.9966
+675    	        105767.9       355.02          19.9966
+676    	        100544.2       223.75          19.9966
+677    	           97211       204.94          19.9966
+678    	           92636       249.42          19.9966

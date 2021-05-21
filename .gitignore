@@ -1,3 +1,12 @@
+data_copy/
+Sergio_code/
+Sergio_data_copy/
 .ipynb_checkpoints/
 __pycache__/
+Untitled*.ipynb
 .hypothesis
+*.html
+*.zip*
+.vscode/
+wrangling.egg-info/*
+*.RTF

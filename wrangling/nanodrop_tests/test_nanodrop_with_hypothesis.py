@@ -8,12 +8,12 @@ import hypothesis.strategies as st
 from hypothesis import given
 from hypothesis.extra.pandas import data_frames, column, columns
 
-import wrangling.nanodrop.tidy_data as td
+import wrangling.nanodrop as nd
 
 
 @given(data_frames(columns=[column("1 (nm)", dtype=int), column("1 (Abs)", dtype=float)]))
 def test_with_hypothesis_rename_abs_column_by_wavelength(df):    
-    renamed = td.rename_abs_columns_by_wavelength(df)
+    renamed = nd.rename_abs_columns_by_wavelength(df)
     
     if len(df) == 0:
         assert renamed == None

@@ -1,32 +1,21 @@
-"""A module for handling data from the Deniz lab nanodrop, especially phase diagrams.
+r"""A module for handling data from the Deniz lab nanodrop, especially phase diagrams.
 
 Classes
 -------
 ParseKey
-    organizes information to parse "Sample ID" column
+    organize information to parse "Sample ID" column
     instance parse_rna_peptide is provided
 
 Functions
 ---------
-run_all(list_of_files, file_reader=pd.read_csv, file_reader_kwargs=dict(sep="\t"), **kwargs)
-    Runs all subsequent functions on the specified data.
+tidy_data(list_of_files, file_reader=pd.read_csv, file_reader_kwargs=dict(sep="\t"), **kwargs)
+    Run all subsequent functions on the specified data.
 clean_up_columns(df)
-    Removes garbage columns from nanodrop data.
+    Remove garbage columns from nanodrop data.
 rename_abs_columns_by_wavelength(df)
-    Tidies absorbance values.
+    Tidy absorbance values.
 analyze_sample_names(df, ParseKey=parse_rna_peptide, **kwargs)
-    Analyzes "Sample ID" column of a dataframe to produce new, tidy columns of data. 
-_make_columns_by_parse_key(df, ParseKey)
-    Adds new columns to a pandas DataFrame according to a given ParseKey object.
-_handle_incorrectly_named_samples(
-    df,
-    incorrectly_named_samples,
-    drop_incorrectly_named_samples=False,
-    drop_buffers=True,
-)
-    Handles given incorrectly named samples in given DataFrame.
-_identify_buffer_measurements(df)
-    Identifies rows of a dataframe where the 'Sample ID' column contains "buffer" or "blank."
+    Analyze "Sample ID" column of a dataframe to produce new, tidy columns of data. 
     
 Depracated
 ----------
@@ -38,7 +27,8 @@ These functions have been moved to wrangling/utilities:
 """
 
 # TODO: note nanodrop make and model
-# TODO: automatically detect types instead of specifying? Skip type specification altogether and let everything be strings?
+# TODO: automatically detect types instead of specifying? 
+# Skip type specification altogether and let everything be strings?
 
 import re
 import pandas as pd
@@ -48,11 +38,15 @@ import warnings
 import wrangling.utilities as utilities
 
 
-def run_all(
-    list_of_files, file_reader=pd.read_csv, file_reader_kwargs=dict(sep="\t"), **kwargs
+def tidy_data(
+    list_of_files, 
+    file_reader=pd.read_csv, 
+    file_reader_kwargs=dict(sep="\t"), 
+    **kwargs
 ):
-    """
-    Given a list of tsv file locations for nanodrop data, outputs a tidy pandas DataFrame.
+    r"""Create a tidy DataFrame from selected files.
+
+    Given a list of file locations for nanodrop data, construct a tidy pandas DataFrame.
     By default, drops measurements containing "buffer" or "blank" from the DataFrame.
     By default, "Sample ID" column is considered to have the form peptide_concentration_ratio,
         and columns will be created to contain this parsed info:
@@ -115,12 +109,11 @@ def run_all(
 
 
 def clean_up_columns(df):
-    """
-    Remove garbage columns from a pandas DataFrame.
+    """Remove garbage columns from a pandas DataFrame.
     
-    Drops rows and columns with only NA contents.
-    Tries to remove columns named "Unnamed", "User name", and "#";
-        Passes quietly if these columns don't exist.
+    Drop rows and columns with only NA contents.
+    Try to remove columns named "Unnamed", "User name", and "#";
+        Pass quietly if these columns don't exist.
     """
 
     df = df.dropna(axis="columns", how="all").dropna(axis="rows", how="all")
@@ -135,8 +128,7 @@ def clean_up_columns(df):
 
 
 def rename_abs_columns_by_wavelength(df):
-    """
-    Tidies absorbance values.
+    """Tidy absorbance values.
     
     Creates new columns "Abs {wavelength}" from wavelength values in previous "# (nm)" columns,
     and populates them with corresponding "# (Abs)" values as floats.
@@ -172,7 +164,7 @@ def rename_abs_columns_by_wavelength(df):
 
 
 class ParseKey:
-    """ParseKeys for use in _make_columns_by_parse_key and analyze_sample_names."""
+    """For use in _make_columns_by_parse_key and analyze_sample_names."""
     
     def __init__(self, *args, separator=None):
         """
@@ -237,8 +229,7 @@ parse_rna_peptide = ParseKey(
 
 
 def analyze_sample_names(df, ParseKey=parse_rna_peptide, **kwargs):
-    """
-    Takes a dataframe and analyzes "Sample ID" column to produce new, tidy columns of data. 
+    """Analyze "Sample ID" column of df to produce new, tidy columns of data.
     
     Parameters
     ----------
@@ -252,8 +243,8 @@ def analyze_sample_names(df, ParseKey=parse_rna_peptide, **kwargs):
     a tidy pandas DataFrame 
     new columns are defined by ParseKey and populated with parsed info from the Sample ID column.
     
-    Troubleshooting
-    ---------------
+    Notes
+    -----
     Sample names may be considered incorrectly named due to:
         different number of items provided in ParseKey than found in "Sample ID" column
         incorrect number, arrangement, or type of separators
@@ -287,9 +278,9 @@ def analyze_sample_names(df, ParseKey=parse_rna_peptide, **kwargs):
 
 
 def _make_columns_by_parse_key(df, ParseKey):
-    """
-    Adds new columns to a pandas DataFrame according to a given ParseKey object.
-    Accepts types str, float, int, and bool.
+    """Add new columns to a pandas DataFrame according to a given ParseKey object.
+    
+    Accept types str, float, int, and bool.
     
     Parameters
     ----------
@@ -318,8 +309,7 @@ def _handle_incorrectly_named_samples(
     drop_incorrectly_named_samples=False,
     drop_buffers=True,
 ):
-    """
-    Handles given incorrectly named samples in given DataFrame.
+    """Handle incorrectly named samples in DataFrame.
     
     If drop_buffers == True, buffer samples will be removed from df.
     If drop_buffers == False, buffer samples will be explicitly kept.
@@ -386,10 +376,9 @@ def _handle_incorrectly_named_samples(
 
 
 def _identify_buffer_measurements(df):
-    """
-    Given a dataframe, identifies the rows where the 'Sample ID' column contains "buffer" or "blank."
+    """Identify the rows of df where 'Sample ID' column contains "buffer" or "blank".
     
-    Returns a list of indices.
+    Return a list of indices.
     """
 
     # first find variations on 'blank' and 'buffer' using boolean indexing
@@ -401,21 +390,21 @@ def _identify_buffer_measurements(df):
 
 
 def break_out_date_and_time(df):
-    """Moved to utilities."""
+    """Depracated. Moved to wrangling.utilities."""
     
     warnings.warn("This function moved to utilities.py", DeprecationWarning)
     return utilities.break_out_date_and_time(df)
 
 
 def drop_zeros(df, columns):
-    """Moved to utilities."""
+    """Depracated. Moved to wrangling.utilities."""
     
     warnings.warn("This function moved to utilities.py", DeprecationWarning)
     return utilities.drop_zeros(df, columns)
 
 
 def find_outlier_bounds(df, col_to_check, ParseKey=None):
-    """Moved to utilities.
+    """Depracated. Moved to utilities.
     
     If ParseKey is given, passes ParseKey.column_names to groupby; otherwise, passes "Sample ID"
     """
@@ -431,7 +420,7 @@ def find_outlier_bounds(df, col_to_check, ParseKey=None):
     
 
 def identify_outliers(df, col_to_check, **kwargs):
-    """Moved to utilities.
+    """Depracated. Moved to utilities.
     
     If groupby is given, passes it to utilities.identify_outliers.
     If ParseKey is given, passes ParseKey.column_names to groupby. 
