@@ -15,6 +15,9 @@ Unit tests for the `nanodrop` subpackage are provided in `nanodrop_tests`. The
 `fluorimeter` and `b2core_plate_fluorimeter` subpackages have not been tested as
 thoroughly.
 
+`wrangling` can be installed from the command line with 
+`pip install git+https://github.com/ebentley17/Deniz_lab_code/`
+
 ## Other Files
 
 `amino_acid_mutations.xlsx` allows users to identify amino acid mutations that
