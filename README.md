@@ -79,3 +79,9 @@ analyzing mass spectromotry results.
 
 #### wrangling/nanodrop_tests
 - `test_tidy_data.py` now works with relative paths to `test_data`
+
+<br>
+
+### Version 2.0.1 Changelog
+
+- fixed issue with package data installation that was breaking corrections functions in `fluorimeter`
