@@ -4,7 +4,7 @@ import setuptools
 
 setuptools.setup(
     name="wrangling",
-    version="2.0.0",
+    version="2.0.1",
     url="https://github.com/ebentley17/Deniz_lab_code",
     author="Emily Bentley",
     author_email="ebentley@scripps.edu",
@@ -19,5 +19,6 @@ setuptools.setup(
         'Programming Language :: Python :: 3.8.8',
     ],
     include_package_data=True,
-    package_data={"corrections": ['*.ifa'], "nanodrop_tests" : ['test_data/*']},
+    use_scm_version=True,
+    setup_requires=['setuptools_scm'],
 )
