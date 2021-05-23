@@ -4,7 +4,7 @@ import setuptools
 
 setuptools.setup(
     name="wrangling",
-    version="2.0.1",
+    version="2.1.0",
     url="https://github.com/ebentley17/Deniz_lab_code",
     author="Emily Bentley",
     author_email="ebentley@scripps.edu",

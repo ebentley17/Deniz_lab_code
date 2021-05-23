@@ -20,9 +20,35 @@ thoroughly.
 
 ## Other Files
 
-`amino_acid_mutations.xlsx` allows users to identify amino acid mutations that
+- `compile_fluorimeter_data` files (`*_simple.py` and `*_detailed.py`) are executable
+scripts for compiling fluorimeter data. Command-line prompts allow compilation without
+writing any code.
+- `amino_acid_mutations.xlsx` allows users to identify amino acid mutations that
 would result in a given change in protein molecular weight, to assist in 
 analyzing mass spectromotry results.
+
+<br>
+
+### Version 2.1.0 Changelog
+
+#### wrangling/tutorials
+- added `compile_fluorimeter_data_simple.py` and `compile_fluorimeter_data_detailed.py` scripts
+- converted `Nanodrop Guide for Non-Coders` into a script, provided alongside the notebook
+
+#### wrangling/fluorimeter
+- `break_out_variable`: throws an error if fewer than two columns are specified
+- `correct_df_intensity`:
+    - new "Corrrected Intensity" column is added, leaving original "Intensity" column unchanged
+    - `detect_slit=True` by default
+
+#### wrangling/tutorials/handle_input
+- `yes_no_to_bool`: optional `empty_string_means` kwarg allows new behavior to be defined
+
+<br>
+
+### Version 2.0.1 Changelog
+
+- fixed issue with package data installation that was breaking corrections functions in `fluorimeter`
 
 <br>
 
@@ -80,8 +106,3 @@ analyzing mass spectromotry results.
 #### wrangling/nanodrop_tests
 - `test_tidy_data.py` now works with relative paths to `test_data`
 
-<br>
-
-### Version 2.0.1 Changelog
-
-- fixed issue with package data installation that was breaking corrections functions in `fluorimeter`

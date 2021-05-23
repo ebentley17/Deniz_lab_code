@@ -259,13 +259,18 @@ def string_to_type(string):
     return data_type
 
 
-def yes_no_to_bool(string):
-    """Convert 'yes' or 'no' inputs to True or False boolean. Throw an error at other inputs."""
+def yes_no_to_bool(string, empty_string_means=None):
+    """Convert 'yes' or 'no' inputs to True or False boolean. 
+    
+    Optionally, set an emtpy string to mean either True or False.
+    Throw an error at other inputs."""
 
     if string.lower() in ["yes", "y"]:
         return True
     elif string.lower() in ["no", "n"]:
         return False
+    elif string == "" and type(empty_string_means) == bool:
+        return empty_string_means
     else:
         raise RuntimeError("Invalid input. Enter yes or no.")
         

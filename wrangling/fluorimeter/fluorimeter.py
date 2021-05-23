@@ -236,6 +236,9 @@ def break_out_variable(df, columns=None, variable="titrant"):
 
     if columns is None:
         columns = df.columns[df.isna().any()]
+    
+    if len(columns) < 2:
+        raise RuntimeError("Fewer than two columns were specified.")
 
     try:
         assert variable not in df.columns
@@ -375,7 +378,7 @@ def get_corrections(polarizer, slit):
     )
 
 
-def correct_df_intensity(df, detect_slit=None, slit=None):
+def correct_df_intensity(df, detect_slit=True, slit=None):
     """Correct the intensity values in a dataframe.
     
     Data is assumed to have been measured without polarizers in place.
@@ -385,7 +388,7 @@ def correct_df_intensity(df, detect_slit=None, slit=None):
     df : a pandas DataFrame with an "Intensity" column and an emission wavelength
         column titled either "em wavelength (nm)" or "EmissionWavelength".
         Construct an appropriate df using assemble_ifx_files.
-    detect_slit : bool, default None
+    detect_slit : bool, default True
         Determines if the appropriate slit will be detected from the "comment"
         column of the dataframe. Exactly one of detect_slit or slit should be
         provided.
@@ -424,6 +427,7 @@ def correct_df_intensity(df, detect_slit=None, slit=None):
     df = df.copy().astype({"Intensity": float}).reset_index(drop=True)
 
     corrected_dfs = []
+    df["Corrected Intensity"] = np.nan
     for comment, data in df.groupby("comment"):
 
         if detect_slit:
@@ -449,7 +453,7 @@ def correct_df_intensity(df, detect_slit=None, slit=None):
             except (KeyError, ValueError):
                 wavelength = float(row["em wavelength (nm)"])
 
-            data.loc[i, "Intensity"] /= corrections_dict[wavelength]
+            data.loc[i, "Corrected Intensity"] = row["Intensity"] / corrections_dict[wavelength]
 
         corrected_dfs.append(data)
 
