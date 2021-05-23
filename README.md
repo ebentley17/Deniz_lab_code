@@ -8,9 +8,8 @@ The `wrangling` package contains three subpackages: `b2core_plate_fluorimeter`,
 instrument outputs.  
 
 `wrangling/tutorials` includes two Jupyter notebooks and three scripts to help
-users to process data without writing code. The Jupyter notebooks include more
-detailed instruction and explanation, while the scripts can be run with a 
-click or from a shortcut.
+users process data without writing code. The Jupyter notebooks include more
+detailed instruction and explanation, while the scripts can be run with a click.
 
 Unit tests for the `nanodrop` subpackage are provided in `nanodrop_tests`. The 
 `fluorimeter` and `b2core_plate_fluorimeter` subpackages have not been tested as
@@ -27,6 +26,18 @@ analyzing mass spectromotry results.
 
 <br>
 
+### Version 2.1.1 Changelog
+
+#### wrangling/fluorimeter
+- `correct_df_intensity`: fixed default arguments. `detect_slit = True` by 
+default, but is overwritten by `slit` if provided.
+
+#### wrangling/tutorials
+- updated `Fluorimeter Guide.ipynb` to use wrangling version 2.1.1
+- comment tweaks on `Nanodrop Guide for Non-Coders.py`
+
+<br>
+
 ### Version 2.1.0 Changelog
 
 #### wrangling/tutorials
@@ -38,6 +49,7 @@ analyzing mass spectromotry results.
 - `correct_df_intensity`:
     - new "Corrrected Intensity" column is added, leaving original "Intensity" column unchanged
     - `detect_slit=True` by default
+        - \*using `slit` without `detect_slit=False` resulted in an error; corrected in Version 2.1.1  
 
 #### wrangling/tutorials/handle_input
 - `yes_no_to_bool`: optional `empty_string_means` kwarg allows new behavior to be defined

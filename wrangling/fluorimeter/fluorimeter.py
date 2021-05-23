@@ -390,11 +390,9 @@ def correct_df_intensity(df, detect_slit=True, slit=None):
         Construct an appropriate df using assemble_ifx_files.
     detect_slit : bool, default True
         Determines if the appropriate slit will be detected from the "comment"
-        column of the dataframe. Exactly one of detect_slit or slit should be
-        provided.
+        column of the dataframe. Overwritten by slit if provided
     slit : one of [0.5, 1, 2, or None], default None
-        Slit to be passed to get_corrections. Exactly one of detect_slit or slit
-        should be provided.
+        Slit to be passed to get_corrections. Overwrites detect_slit if provided.
 
     Returns
     -------
@@ -402,7 +400,7 @@ def correct_df_intensity(df, detect_slit=True, slit=None):
 
     Raises
     -----
-    RuntimeError if both or neither of detect_slit and slit are provided
+    RuntimeError if detect_slit and slit are both None
     RuntimeError if detect_slit=True but "comment" column cannot be interpreted.
 
     Notes
@@ -418,9 +416,8 @@ def correct_df_intensity(df, detect_slit=True, slit=None):
     Mixed slits are not supported.
     """
 
-    if not bool(detect_slit or slit) or bool(detect_slit and slit):
-        raise RuntimeError("Exactly one of detect_slit and slit should be provided.")
-    if not bool(detect_slit):
+    if slit is not None:
+        detect_slit = False
         if slit not in [0.5, 1, 2]:
             raise RuntimeError("slit must be one of [0.5, 1, 2]")
 

@@ -47,9 +47,10 @@ if "tsv" == file_ext:
 elif "csv" == file_ext:
     file_reader_kwargs=dict()
 
+# Describe your sample names:
 """
-Describe your data: Example
----------------------------
+Example
+-------
 I always name my samples in the format: 
 
 [Peptide]_[Peptide Concentration (uM)]_[RNA/Peptide Ratio]
@@ -64,7 +65,7 @@ I would fill out this section as follows:
     Name of data in position 2: Peptide Concentration (uM)
     Name of data in position 3: RNA/Peptide Ratio
 """
-# Describe your sample names:
+
 args, kwargs = handle_input.request_parsekey_specifications()
 MyKey = nanodrop.ParseKey(*args, **kwargs)
 
@@ -87,7 +88,7 @@ drop_incorrectly_named_samples = handle_input.interpret(
     handle_input.yes_no_to_bool,
 )
 
-# ## Reformat the data
+# Reformat the data
 # This may take several seconds, especially if you have a lot of files
 
 data = nanodrop.tidy_data(

@@ -25,5 +25,5 @@ from wrangling.b2core_plate_fluorimeter import b2core_plate_fluorimeter
 from wrangling.fluorimeter import fluorimeter
 from wrangling.nanodrop import nanodrop
 
-__version__ = "2.1.0"
+__version__ = "2.1.1"
 __author__ = "Emily Bentley"
