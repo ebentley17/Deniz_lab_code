@@ -7,9 +7,10 @@ The `wrangling` package contains three subpackages: `b2core_plate_fluorimeter`,
 `fluorimeter`, and `nanodrop`, along with utilities code for use with all three 
 instrument outputs.  
 
-`wrangling/tutorials` includes two Jupyter notebooks: "Fluorimeter Guide" to help
-users learn to use the fluorimeter package, and "Nanodrop Guide for Non-Coders" 
-to allow users to process nanodrop data with no knowledge of python.
+`wrangling/tutorials` includes two Jupyter notebooks and three scripts to help
+users to process data without writing code. The Jupyter notebooks include more
+detailed instruction and explanation, while the scripts can be run with a 
+click or from a shortcut.
 
 Unit tests for the `nanodrop` subpackage are provided in `nanodrop_tests`. The 
 `fluorimeter` and `b2core_plate_fluorimeter` subpackages have not been tested as
@@ -20,9 +21,6 @@ thoroughly.
 
 ## Other Files
 
-- `compile_fluorimeter_data` files (`*_simple.py` and `*_detailed.py`) are executable
-scripts for compiling fluorimeter data. Command-line prompts allow compilation without
-writing any code.
 - `amino_acid_mutations.xlsx` allows users to identify amino acid mutations that
 would result in a given change in protein molecular weight, to assist in 
 analyzing mass spectromotry results.
