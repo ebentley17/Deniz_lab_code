@@ -24,6 +24,9 @@ thoroughly.
 would result in a given change in protein molecular weight, to assist in 
 analyzing mass spectromotry results.
 
+- `Thesis Chapter 3 - Supporting Information` is available as a .ipynb or .html 
+file. This code is abbreviated in my PhD thesis and available in full here.
+
 <br>
 
 ### Version 2.1.1 Changelog
